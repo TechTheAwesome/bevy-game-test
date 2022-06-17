@@ -6,7 +6,7 @@ pub mod systems;
 use bevy::prelude::*;
 use systems::{
     setup_ball::setup_ball, setup_cameras::setup_cameras, setup_paddle::setup_paddle,
-    setup_scoreboard::setup_scoreboard, setup_walls::setup_walls,
+    setup_scoreboard::setup_scoreboard, setup_walls::setup_walls, setup_bricks::setup_bricks,
 };
 
 #[cfg(feature = "debug")]
@@ -33,7 +33,8 @@ fn main() {
         .add_startup_system(setup_paddle)
         .add_startup_system(setup_walls)
         .add_startup_system(setup_ball)
-        .add_startup_system(setup_scoreboard);
+        .add_startup_system(setup_scoreboard)
+        .add_startup_system(setup_bricks);
 
     // run app
     app.run();
