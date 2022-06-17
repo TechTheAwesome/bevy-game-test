@@ -1,3 +1,5 @@
+pub mod wall_bundle;
+
 use bevy::{prelude::{Component, Deref, DerefMut}, math::Vec2};
 
 #[derive(Component)]
