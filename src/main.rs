@@ -5,10 +5,8 @@ pub mod systems;
 
 use bevy::prelude::*;
 use systems::{
-    setup_paddle::setup_paddle, 
-    setup_cameras::setup_cameras, 
-    setup_walls::setup_walls,
-    setup_ball::setup_ball,
+    setup_ball::setup_ball, setup_cameras::setup_cameras, setup_paddle::setup_paddle,
+    setup_scoreboard::setup_scoreboard, setup_walls::setup_walls,
 };
 
 #[cfg(feature = "debug")]
@@ -29,15 +27,14 @@ fn main() {
     app.add_plugin(WorldInspectorPlugin::new())
         .register_inspectable::<InspectableType>()
         .register_type::<ReflectedType>();
-    
+
     // startup systems
     app.add_startup_system(setup_cameras)
         .add_startup_system(setup_paddle)
         .add_startup_system(setup_walls)
-        .add_startup_system(setup_ball);
+        .add_startup_system(setup_ball)
+        .add_startup_system(setup_scoreboard);
 
     // run app
     app.run();
 }
-
-
