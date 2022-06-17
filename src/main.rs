@@ -4,7 +4,12 @@ pub mod resources;
 pub mod systems;
 
 use bevy::prelude::*;
-use systems::{setup_paddle::setup_paddle, setup_cameras::setup_cameras, setup_walls::setup_walls};
+use systems::{
+    setup_paddle::setup_paddle, 
+    setup_cameras::setup_cameras, 
+    setup_walls::setup_walls,
+    setup_ball::setup_ball,
+};
 
 #[cfg(feature = "debug")]
 use bevy_inspector_egui::{Inspectable, RegisterInspectable, WorldInspectorPlugin};
@@ -28,7 +33,8 @@ fn main() {
     // startup systems
     app.add_startup_system(setup_cameras)
         .add_startup_system(setup_paddle)
-        .add_startup_system(setup_walls);
+        .add_startup_system(setup_walls)
+        .add_startup_system(setup_ball);
 
     // run app
     app.run();

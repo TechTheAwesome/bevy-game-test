@@ -9,7 +9,7 @@ pub struct Paddle;
 pub struct Ball;
 
 #[derive(Component, Deref, DerefMut)]
-pub struct Velocity(Vec2);
+pub struct Velocity(pub Vec2);
 
 #[derive(Component)]
 pub struct Collider;
