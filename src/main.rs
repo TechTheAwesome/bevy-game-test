@@ -4,6 +4,7 @@ pub mod resources;
 pub mod systems;
 
 use bevy::prelude::*;
+use components::CollisionEvent;
 use constants::BACKGROUND_COLOR;
 use resources::Scoreboard;
 use systems::{
@@ -34,6 +35,8 @@ fn main() {
 
     app.insert_resource(Scoreboard { score: 0 })
         .insert_resource(ClearColor(BACKGROUND_COLOR));
+
+    app.add_event::<CollisionEvent>();
 
     // startup systems
     app.add_startup_system(setup_cameras)
