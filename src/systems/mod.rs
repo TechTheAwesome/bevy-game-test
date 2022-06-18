@@ -8,3 +8,4 @@ pub mod setup_bricks;
 pub mod system_paddle;
 pub mod system_velocity;
 pub mod system_scoreboard;
+pub mod system_collision;
