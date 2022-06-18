@@ -4,6 +4,8 @@ pub mod resources;
 pub mod systems;
 
 use bevy::prelude::*;
+use constants::BACKGROUND_COLOR;
+use resources::Scoreboard;
 use systems::{
     setup_ball::setup_ball, setup_bricks::setup_bricks, setup_cameras::setup_cameras,
     setup_paddle::setup_paddle, setup_scoreboard::setup_scoreboard, setup_walls::setup_walls,
@@ -29,6 +31,9 @@ fn main() {
     app.add_plugin(WorldInspectorPlugin::new())
         .register_inspectable::<InspectableType>()
         .register_type::<ReflectedType>();
+
+    app.insert_resource(Scoreboard { score: 0 })
+        .insert_resource(ClearColor(BACKGROUND_COLOR));
 
     // startup systems
     app.add_startup_system(setup_cameras)
