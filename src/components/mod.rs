@@ -14,8 +14,13 @@ pub struct Velocity(pub Vec2);
 #[derive(Component)]
 pub struct Collider;
 
-#[derive(Default)]
-pub struct CollisionEvent;
-
 #[derive(Component)]
 pub struct Brick;
+
+#[derive(Debug)]
+pub enum CollisionEvent {
+	Wall,
+	Brick,
+	Paddle
+}
+

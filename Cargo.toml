@@ -6,6 +6,7 @@ edition = "2021"
 [features]
 default = ["debug"]
 debug = ["bevy-inspector-egui"]
+fps = []
 
 [dependencies]
 bevy = "0.7"

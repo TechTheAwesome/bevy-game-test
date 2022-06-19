@@ -1,33 +1,45 @@
-use bevy::{prelude::*, sprite::collide_aabb::{collide, Collision}};
+use bevy::{
+    prelude::*,
+    sprite::collide_aabb::{collide, Collision},
+};
 
-use crate::{resources::Scoreboard, components::{Velocity, Brick, Collider, Ball, CollisionEvent}};
+use crate::{
+    components::{Ball, Brick, Collider, CollisionEvent, Velocity, Paddle},
+    resources::Scoreboard,
+};
 
 pub fn check_for_collisions(
     mut commands: Commands,
     mut scoreboard: ResMut<Scoreboard>,
     mut ball_query: Query<(&mut Velocity, &Transform), With<Ball>>,
-    collider_query: Query<(Entity, &Transform, Option<&Brick>), With<Collider>>,
+    collider_query: Query<(Entity, &Transform, Option<&Brick>, Option<&Paddle>), With<Collider>>,
     mut collision_events: EventWriter<CollisionEvent>,
 ) {
     let (mut ball_velocity, ball_transform) = ball_query.single_mut();
     let ball_size = ball_transform.scale.truncate();
 
-    // check collision with walls
-    for (collider_entity, transform, maybe_brick) in collider_query.iter() {
-        let collision = collide(
+    // check collision with colliders
+    for (collider_entity, transform, maybe_brick, maybe_paddle) in collider_query.iter() {
+        let maybe_collision = collide(
             ball_transform.translation,
             ball_size,
             transform.translation,
             transform.scale.truncate(),
         );
-        if let Some(collision) = collision {
+
+        if let Some(collision) = maybe_collision {
             // Sends a collision event so that other systems can react to the collision
-            collision_events.send_default();
 
             // Bricks should be despawned and increment the scoreboard on collision
             if maybe_brick.is_some() {
                 scoreboard.score += 1;
                 commands.entity(collider_entity).despawn();
+                // send collide with wall
+                collision_events.send(CollisionEvent::Brick);
+            } else if maybe_paddle.is_some() {
+                collision_events.send(CollisionEvent::Paddle);
+            } else {
+                collision_events.send(CollisionEvent::Wall);
             }
 
             // reflect the ball when it collides

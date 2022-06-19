@@ -9,3 +9,4 @@ pub mod system_paddle;
 pub mod system_velocity;
 pub mod system_scoreboard;
 pub mod system_collision;
+pub mod system_win_condition;
