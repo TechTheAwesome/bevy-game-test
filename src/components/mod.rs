@@ -8,6 +8,13 @@ pub struct Paddle;
 #[derive(Component)]
 pub struct Ball;
 
+#[derive(Component)]
+pub struct Scoreboard;
+
+#[derive(Component)]
+pub struct Button;
+
+
 #[derive(Component, Deref, DerefMut)]
 pub struct Velocity(pub Vec2);
 

@@ -1,28 +1,26 @@
 use bevy::prelude::*;
 
-use crate::constants::*;
+use crate::{constants::*, components::Scoreboard};
 
 
 pub fn setup_scoreboard(mut commands: Commands, asset_server: Res<AssetServer>){
+
+		let style = TextStyle {
+			font: asset_server.load("fonts/FiraSans-Bold.ttf"),
+			font_size: SCOREBOARD_FONT_SIZE,
+			color: TEXT_COLOR,
+		};
 	    // Scoreboard
 		commands.spawn_bundle(TextBundle {
 			text: Text {
 				sections: vec![
 					TextSection {
 						value: "Score: ".to_string(),
-						style: TextStyle {
-							font: asset_server.load("fonts/FiraSans-Bold.ttf"),
-							font_size: SCOREBOARD_FONT_SIZE,
-							color: TEXT_COLOR,
-						},
+						style: style.clone(),
 					},
 					TextSection {
 						value: "".to_string(),
-						style: TextStyle {
-							font: asset_server.load("fonts/FiraMono-Medium.ttf"),
-							font_size: SCOREBOARD_FONT_SIZE,
-							color: SCORE_COLOR,
-						},
+						style: style.clone(),
 					},
 				],
 				..default()
@@ -37,5 +35,5 @@ pub fn setup_scoreboard(mut commands: Commands, asset_server: Res<AssetServer>){
 				..default()
 			},
 			..default()
-		});
+		}).insert(Scoreboard);
 }

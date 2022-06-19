@@ -16,7 +16,7 @@ use systems::{
     setup_paddle::setup_paddle, setup_scoreboard::setup_scoreboard, setup_walls::setup_walls,
     system_collision::check_for_collisions, system_paddle::move_paddle,
     system_scoreboard::update_scoreboard, system_velocity::apply_velocity,
-    system_win_condition::check_win_condition,
+    system_win_condition::check_win_condition, setup_button::setup_button,
 };
 
 #[cfg(feature = "debug")]
@@ -54,7 +54,8 @@ fn main() {
         .add_startup_system(setup_walls)
         .add_startup_system(setup_ball)
         .add_startup_system(setup_scoreboard)
-        .add_startup_system(setup_bricks);
+        .add_startup_system(setup_bricks)
+        .add_startup_system(setup_button);
 
     // normal systems
     app.add_system(move_paddle)
