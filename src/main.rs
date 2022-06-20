@@ -13,39 +13,38 @@ use components::CollisionEvent;
 use constants::BACKGROUND_COLOR;
 use resources::Scoreboard;
 use systems::{
-    setup_ball::setup_ball, setup_bricks::setup_bricks, setup_cameras::setup_cameras,
-    setup_paddle::setup_paddle, setup_scoreboard::setup_scoreboard, setup_walls::setup_walls,
-    system_collision::check_for_collisions, system_paddle::move_paddle,
+    setup_ball::setup_ball, setup_bricks::setup_bricks, button::{setup_button::setup_button, button_system::button_system},
+    setup_cameras::setup_cameras, setup_paddle::setup_paddle, setup_scoreboard::setup_scoreboard,
+    setup_walls::setup_walls, system_collision::check_for_collisions, system_paddle::move_paddle,
     system_scoreboard::update_scoreboard, system_velocity::apply_velocity,
-    system_win_condition::check_win_condition, setup_button::setup_button,
+    system_win_condition::check_win_condition,
 };
 
 #[cfg(feature = "debug")]
-use bevy_inspector_egui::{Inspectable, RegisterInspectable, WorldInspectorPlugin};
-#[cfg(feature = "debug")]
-#[derive(Inspectable, Component)]
-struct InspectableType;
-#[cfg(feature = "debug")]
-#[derive(Reflect, Component, Default)]
-#[reflect(Component)]
-struct ReflectedType;
+use bevy_inspector_egui::WorldInspectorPlugin;
+
+#[derive(Clone, Eq, PartialEq, Debug, Hash)]
+pub enum GameState {
+    StartMenu,
+    Playing,
+    End,
+}
 
 fn main() {
     let mut app = App::new();
+    // add state
+    app.add_state(GameState::StartMenu);
+
     // add plugins
     app.add_plugins_with(DefaultPlugins, |group| {
         group.add_before::<bevy::asset::AssetPlugin, _>(EmbeddedAssetPlugin)
-    }); 
-    #[cfg(feature = "fps")] 
+    });
+    #[cfg(feature = "fps")]
     app.add_plugin(LogDiagnosticsPlugin::default())
         .add_plugin(FrameTimeDiagnosticsPlugin::default());
 
     #[cfg(feature = "debug")] // world inspector has to go after default plugin to work
-    app.add_plugin(WorldInspectorPlugin::new())
-        .register_inspectable::<InspectableType>()
-        .register_type::<ReflectedType>();
-
-
+    app.add_plugin(WorldInspectorPlugin::new());
 
     app.insert_resource(Scoreboard { score: 0 })
         .insert_resource(ClearColor(BACKGROUND_COLOR));
@@ -67,6 +66,7 @@ fn main() {
         .add_system(update_scoreboard)
         .add_system(check_for_collisions)
         .add_system(check_win_condition)
+        .add_system(button_system)
         .add_system(bevy::input::system::exit_on_esc_system); //exit-on-escape :D
 
     // run app

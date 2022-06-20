@@ -31,3 +31,5 @@ pub enum CollisionEvent {
 	Paddle
 }
 
+#[derive(Component)]
+pub struct MainCamera;
