@@ -7,6 +7,7 @@ pub mod systems;
 use bevy::diagnostic::{FrameTimeDiagnosticsPlugin, LogDiagnosticsPlugin};
 
 use bevy::prelude::*;
+use bevy_embedded_assets::EmbeddedAssetPlugin;
 
 use components::CollisionEvent;
 use constants::BACKGROUND_COLOR;
@@ -32,8 +33,9 @@ struct ReflectedType;
 fn main() {
     let mut app = App::new();
     // add plugins
-    app.add_plugins(DefaultPlugins);
-    
+    app.add_plugins_with(DefaultPlugins, |group| {
+        group.add_before::<bevy::asset::AssetPlugin, _>(EmbeddedAssetPlugin)
+    }); 
     #[cfg(feature = "fps")] 
     app.add_plugin(LogDiagnosticsPlugin::default())
         .add_plugin(FrameTimeDiagnosticsPlugin::default());
@@ -42,6 +44,8 @@ fn main() {
     app.add_plugin(WorldInspectorPlugin::new())
         .register_inspectable::<InspectableType>()
         .register_type::<ReflectedType>();
+
+
 
     app.insert_resource(Scoreboard { score: 0 })
         .insert_resource(ClearColor(BACKGROUND_COLOR));
