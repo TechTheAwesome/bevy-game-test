@@ -13,10 +13,20 @@ use components::CollisionEvent;
 use constants::BACKGROUND_COLOR;
 use resources::Scoreboard;
 use systems::{
-    setup_ball::setup_ball, setup_bricks::setup_bricks, button::{setup_button::setup_button, button_system::button_system},
-    setup_cameras::setup_cameras, setup_paddle::setup_paddle, setup_scoreboard::setup_scoreboard,
-    setup_walls::setup_walls, system_collision::check_for_collisions, system_paddle::move_paddle,
-    system_scoreboard::update_scoreboard, system_velocity::apply_velocity,
+    button::{
+        button_system::{button_system, start_button, remove_button},
+    },
+    setup_start_menu::setup_start_menu,
+    setup_ball::setup_ball,
+    setup_bricks::setup_bricks,
+    setup_cameras::setup_cameras,
+    setup_paddle::setup_paddle,
+    setup_scoreboard::setup_scoreboard,
+    setup_walls::setup_walls,
+    system_collision::check_for_collisions,
+    system_paddle::move_paddle,
+    system_scoreboard::update_scoreboard,
+    system_velocity::apply_velocity,
     system_win_condition::check_win_condition,
 };
 
@@ -52,22 +62,33 @@ fn main() {
     app.add_event::<CollisionEvent>();
 
     // startup systems
-    app.add_startup_system(setup_cameras)
-        .add_startup_system(setup_paddle)
-        .add_startup_system(setup_walls)
-        .add_startup_system(setup_ball)
-        .add_startup_system(setup_scoreboard)
-        .add_startup_system(setup_bricks)
-        .add_startup_system(setup_button);
+    app.add_startup_system(setup_cameras);
+
+    app.add_system_set(SystemSet::on_enter(GameState::StartMenu).with_system(setup_start_menu));
+    app.add_system_set(
+        SystemSet::on_enter(GameState::Playing)
+            .with_system(setup_walls)
+            .with_system(setup_scoreboard)
+            .with_system(setup_bricks)
+            .with_system(setup_ball)
+            .with_system(setup_paddle)
+            .with_system(remove_button),
+    );
 
     // normal systems
-    app.add_system(move_paddle)
-        .add_system(apply_velocity)
-        .add_system(update_scoreboard)
-        .add_system(check_for_collisions)
-        .add_system(check_win_condition)
-        .add_system(button_system)
+    app.add_system(button_system)
         .add_system(bevy::input::system::exit_on_esc_system); //exit-on-escape :D
+
+    app.add_system_set(SystemSet::on_update(GameState::StartMenu).with_system(start_button));
+
+    app.add_system_set(
+        SystemSet::on_update(GameState::Playing)
+            .with_system(move_paddle)
+            .with_system(apply_velocity)
+            .with_system(update_scoreboard)
+            .with_system(check_for_collisions)
+            .with_system(check_win_condition),
+    );
 
     // run app
     app.run();

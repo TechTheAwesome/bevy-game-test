@@ -33,3 +33,9 @@ pub enum CollisionEvent {
 
 #[derive(Component)]
 pub struct MainCamera;
+
+#[derive(Component)]
+pub struct StartMenu;
+
+#[derive(Component)]
+pub struct StartButton;
